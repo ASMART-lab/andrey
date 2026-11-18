@@ -1,0 +1,360 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#0b0a10">
+<title>Андрей Баранов — резюме</title>
+<link rel="icon" href="favicon.ico" sizes="any"><link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@600;700&family=Manrope:wght@400;500;600;700&display=swap">
+<style>
+/* Полноэкранная 3D-сцена + слои интерфейса поверх. Сетка 8px, тёмная тема ASMART. */
+:root{
+  --bg:#0b0a10;--panel:rgba(18,17,26,.88);--panel2:#1b1a26;--line:#2c2a3a;
+  --tx:#f4f3f8;--mut:#a9a6ba;--dim:#8c899e;
+  --a1:#7c5cff;--a2:#22d3ee;--ok:#3fe0c5;
+  --grad:linear-gradient(100deg,#7c5cff,#22d3ee);
+  --fd:"Unbounded",system-ui,sans-serif;--fb:"Manrope",system-ui,sans-serif;
+  color-scheme:dark
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--tx);font:16px/1.5 var(--fb);overflow:hidden;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none}
+#c{position:fixed;inset:0;width:100%;height:100%;display:block;touch-action:none;cursor:grab}
+#c:active{cursor:grabbing}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible,a:focus-visible{outline:2px solid var(--a2);outline-offset:2px}
+
+/* HUD */
+.hud{position:fixed;left:0;right:0;top:0;display:flex;justify-content:space-between;align-items:center;gap:8px;
+  padding:calc(16px + env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) 0 max(16px,env(safe-area-inset-left,0px));pointer-events:none;z-index:5}
+.hud>*{pointer-events:auto}
+.pill{display:flex;align-items:center;gap:8px;height:40px;padding:0 16px;border-radius:20px;background:var(--panel);border:1px solid var(--line);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);font-size:13px;font-weight:600}
+.dots{display:flex;gap:4px}.dots i{width:8px;height:8px;border-radius:50%;background:var(--line);transition:background .4s}.dots i.on{background:var(--ok)}
+.ghost{height:40px;padding:0 16px;border-radius:20px;background:var(--panel);border:1px solid var(--line);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);font-size:13px;font-weight:600}
+.bar{position:fixed;left:0;right:0;bottom:0;display:flex;flex-direction:column;align-items:center;gap:12px;
+  padding:0 max(16px,env(safe-area-inset-right,0px)) calc(24px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));z-index:5;pointer-events:none}
+.bar>*{pointer-events:auto}
+.hint{font-size:13px;color:var(--mut);display:flex;align-items:center;gap:8px;transition:opacity .5s;text-align:center}
+.hint svg{flex:none}
+.pri{height:56px;padding:0 32px;border:0;border-radius:16px;background:var(--grad);color:#0b0a10;font-weight:700;font-size:16px;box-shadow:0 12px 32px rgba(124,92,255,.35);transition:transform .15s}
+.pri:active{transform:scale(.97)}
+.pri.w{width:100%}
+.sec{height:56px;padding:0 24px;border-radius:16px;background:var(--panel2);border:1px solid var(--line);font-weight:600;font-size:16px}
+
+/* стрелка к цели */
+#arw{position:fixed;width:48px;height:48px;margin:-24px 0 0 -24px;border-radius:50%;background:var(--grad);display:none;place-items:center;z-index:4;box-shadow:0 0 0 8px rgba(124,92,255,.18);pointer-events:none}
+#arw svg{width:24px;height:24px}
+
+/* слои-окна */
+.ov{position:fixed;inset:0;z-index:10;display:flex;align-items:flex-end;justify-content:center;background:rgba(5,5,9,.55);opacity:0;pointer-events:none;transition:opacity .3s}
+.ov.on{opacity:1;pointer-events:auto}
+.sheet{width:100%;max-width:440px;max-height:88vh;overflow:auto;background:var(--panel);border:1px solid var(--line);border-bottom:0;border-radius:24px 24px 0 0;
+  padding:24px max(24px,env(safe-area-inset-right,0px)) calc(24px + env(safe-area-inset-bottom,0px)) max(24px,env(safe-area-inset-left,0px));
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);transform:translateY(24px);transition:transform .35s cubic-bezier(.2,.8,.2,1)}
+.ov.on .sheet{transform:none}
+@media(min-width:760px){.ov{align-items:center}.sheet{border-radius:24px;border-bottom:1px solid var(--line);padding:32px}}
+.eb{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.sheet h2{font:600 22px/1.25 var(--fd);margin:8px 0 0;text-wrap:balance}
+.sheet p{margin:12px 0 0;color:var(--mut);font-size:15px}
+.ans{display:flex;flex-direction:column;gap:8px;margin-top:24px}
+.ans button{min-height:56px;padding:12px 16px;border-radius:16px;background:var(--panel2);border:1px solid var(--line);text-align:left;font-weight:600;font-size:15px;transition:border-color .2s,background .2s}
+.ans button:hover{border-color:var(--a1)}
+.tip{margin-top:16px;padding:16px;border-radius:16px;background:rgba(124,92,255,.12);border:1px solid rgba(124,92,255,.35);font-size:15px}
+.tip b{color:var(--tx)}
+.acts{display:flex;flex-direction:column;gap:8px;margin-top:24px}
+.tl{display:flex;flex-direction:column;gap:8px;margin-top:24px}
+.tl button{display:flex;align-items:center;gap:12px;min-height:56px;padding:8px 16px;border-radius:16px;background:var(--panel2);border:1px solid var(--line);text-align:left;font-weight:600;font-size:15px}
+.tl button .ic{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:rgba(124,92,255,.16);flex:none}
+.tl button .ic svg{width:20px;height:20px;stroke:#c9bcff}
+.tl button small{display:block;color:var(--dim);font-weight:500;font-size:13px}
+.tl button .st{margin-left:auto;font-size:13px;color:var(--ok);font-weight:600}
+.info{margin:16px 0 0;padding:0;list-style:none;display:flex;flex-direction:column;gap:12px}
+.info li{display:flex;gap:12px;font-size:15px;color:var(--tx)}
+.info li:before{content:"";width:6px;height:6px;border-radius:50%;background:var(--a2);margin-top:9px;flex:none}
+.info a{color:var(--a2);text-decoration:none;font-weight:600}
+.close{position:absolute;right:16px;top:16px;width:40px;height:40px;border-radius:12px;border:1px solid var(--line);background:var(--panel2);display:grid;place-items:center}
+.rel{position:relative}
+
+/* интро */
+#intro{position:fixed;inset:0;z-index:20;display:flex;align-items:center;justify-content:center;background:radial-gradient(60% 50% at 50% 40%,rgba(124,92,255,.14),transparent 70%),rgba(8,8,12,.82);transition:opacity .6s}
+#intro.off{opacity:0;pointer-events:none}
+.iw{max-width:440px;padding:0 max(24px,env(safe-area-inset-left,0px));text-align:center;display:flex;flex-direction:column;align-items:center}
+.iw h1{font:700 32px/1.15 var(--fd);margin:16px 0 0;letter-spacing:-.5px;text-wrap:balance}
+.iw p{color:var(--mut);margin:16px 0 0;font-size:16px}
+.iw .pri{margin-top:32px;min-width:200px}
+.lnk{margin-top:16px;background:none;border:0;color:var(--mut);font-size:14px;font-weight:600;text-decoration:underline;text-underline-offset:4px;height:44px}
+
+/* резюме целиком */
+#cv{position:fixed;inset:0;z-index:30;background:var(--bg);overflow:auto;opacity:0;pointer-events:none;transition:opacity .35s;-webkit-user-select:text;user-select:text}
+#cv.on{opacity:1;pointer-events:auto}
+.cvw{max-width:720px;margin:0 auto;padding:calc(24px + env(safe-area-inset-top,0px)) max(24px,env(safe-area-inset-right,0px)) calc(48px + env(safe-area-inset-bottom,0px)) max(24px,env(safe-area-inset-left,0px))}
+.cvh{display:flex;justify-content:space-between;align-items:flex-start;gap:16px}
+.cvw h1{font:700 32px/1.15 var(--fd);margin:8px 0 0;letter-spacing:-.5px}
+.role{font-size:17px;font-weight:600;margin-top:8px;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.meta{color:var(--mut);font-size:15px;margin-top:8px}
+.cvs{margin-top:40px}
+.cvs h3{font:600 13px var(--fb);letter-spacing:.08em;text-transform:uppercase;color:var(--dim);margin:0}
+.card{margin-top:16px;padding:24px;border-radius:16px;background:var(--panel2);border:1px solid var(--line)}
+.card+.card{margin-top:8px}
+.card b{font-size:17px}.card .sub{color:var(--mut);font-size:14px;margin-top:4px}
+.card p{margin:12px 0 0;color:var(--tx);font-size:15px}
+.tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.tags span{height:32px;padding:0 12px;border-radius:16px;border:1px solid var(--line);display:inline-flex;align-items:center;font-size:13px;font-weight:600;color:#d6d3e2}
+.card a{color:var(--a2);font-weight:600;text-decoration:none}
+.ph{font:700 24px var(--fd);margin-top:8px;letter-spacing:-.3px}
+.row{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.row>*{flex:1 1 200px}
+a.pri,a.sec{display:inline-flex;align-items:center;justify-content:center;text-decoration:none}
+a.sec{color:var(--tx)}
+.toast{position:fixed;left:50%;bottom:calc(96px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:12px 16px;font-size:14px;font-weight:600;z-index:40;opacity:0;transition:opacity .3s;pointer-events:none}
+.toast.on{opacity:1}
+@media(max-width:400px){.iw h1,.cvw h1{font-size:28px}.ghost,.pill{padding:0 12px}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<canvas id="c" aria-label="Тёмная комната. Поворачивайте обзор пальцем или мышью"></canvas>
+
+<div class="hud">
+  <div class="pill" aria-live="polite"><span id="cnt">Найдено 0 из 5</span><span class="dots" id="dots"><i></i><i></i><i></i><i></i><i></i></span></div>
+  <button class="ghost" id="toCv">Сразу к резюме</button>
+</div>
+<div id="arw" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#0b0a10" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
+<div class="bar">
+  <div class="hint" id="hint"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 11V6a2 2 0 0 0-4 0M14 10V4a2 2 0 0 0-4 0v2M10 10.5V6a2 2 0 0 0-4 0v8"/><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/></svg><span id="hintT">Осмотритесь: ведите пальцем или мышью</span></div>
+  <button class="pri" id="ask">Что хотите узнать?</button>
+</div>
+
+<div class="ov" id="ov" role="dialog" aria-modal="true"><div class="sheet rel" id="sh"></div></div>
+
+<div id="intro">
+  <div class="iw">
+    <div class="eb">Резюме · интерактив</div>
+    <h1>Кто сидит в тёмной комнате?</h1>
+    <p>Пять предметов расскажут о нём всё. Ответьте на пару несложных вопросов — и свет загорится.</p>
+    <button class="pri" id="go">Войти</button>
+    <button class="lnk" id="skip">Нет времени? Сразу к резюме</button>
+  </div>
+</div>
+
+<div id="cv" role="dialog" aria-modal="true" aria-label="Резюме"><div class="cvw">
+  <div class="cvh"><div>
+    <div class="eb">Резюме</div>
+    <h1>Андрей Баранов</h1>
+    <div class="role">AI-разработчик · вайб-кодер · сайты, MVP, боты</div>
+    <div class="meta">Удалённо · открыт к найму и проектам</div>
+  </div><button class="close" id="cvX" aria-label="Закрыть резюме"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
+  <div id="cvBody"></div>
+</div></div>
+<div class="toast" id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
+<script>
+(function(){
+var PHONE='8 908 190-00-61',TEL='+79081900061';
+var IC={
+ edu:'<path d="M22 10 12 5 2 10l10 5 10-5Z"/><path d="M6 12v5c3 2 9 2 12 0v-5"/>',
+ skl:'<rect x="3" y="4" width="18" height="12" rx="2"/><path d="M2 20h20M9 9l-2 2 2 2M15 9l2 2-2 2"/>',
+ exp:'<rect x="5" y="3" width="14" height="18" rx="1"/><path d="M12 3v18M10 12h.01M14 12h.01"/>',
+ wrk:'<rect x="2" y="4" width="20" height="13" rx="2"/><path d="M8 21h8M12 17v4"/>',
+ con:'<rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/>'
+};
+var T=[
+ {id:'edu',ic:'edu',name:'Образование',sub:'где учился',
+  q:'Чему научиться сложнее?',a:['Писать код','Видеть, где интерфейсу неудобно'],
+  r:['Код сегодня помогает писать ИИ. А вот замечать неудобства учат на дизайне.','В точку. Этому учат на дизайне — и это не заменит ни один ИИ.'],
+  tip:'Диплом висит на стене слева.',
+  title:'Образование',items:['Курс «UX/UI-дизайнер» от Яндекса — диплом','Сетка 8 px, типографика, контраст, прототипы — в каждом проекте','Учусь на практике каждый день: от сервера до интерфейса']},
+ {id:'skl',ic:'skl',name:'Навыки',sub:'что умеет',
+  q:'Сколько нужно, чтобы собрать лендинг с доменом и ботом заявок?',a:['Пару недель','Один вечер'],
+  r:['Обычно так. Андрей уложился в один вечер.','Именно столько ушло у Андрея — вместе с доменом, SSL и ботом.'],
+  tip:'Загляните в ноутбук на столе справа.',
+  title:'Навыки',items:['Разработка с ИИ: формулирую задачу и спецификацию, ИИ пишет код, я проверяю и довожу до результата','Python, FastAPI, MariaDB, nginx, Linux-сервер, Git','HTML, CSS, JavaScript, three.js (3D в браузере)','Боты MAX, Яндекс Метрика и Вебмастер, SEO-основа']},
+ {id:'exp',ic:'exp',name:'Опыт',sub:'чем занимался',
+  q:'Что важнее в работе?',a:['Хорошая идея','Доведённый до конца результат'],
+  r:['Идея важна. Но ценят того, кто её довёл до запуска.','Согласен. Андрей так работает с 2008 года.'],
+  tip:'Шкаф стоит у правой стены.',
+  title:'Опыт',items:['С 2008 года — ИП в сфере производства и торговли: клиенты, закупки, расчёты, сроки','Сейчас — самозанятый: сайты, MVP и боты с помощью ИИ','2026 — создал маркетплейс X-МАРКЕТ и студию ASMART-STUDIO']},
+ {id:'wrk',ic:'wrk',name:'Работы',sub:'что сделал',
+  q:'Что убедит быстрее: резюме или работающий продукт?',a:['Резюме','Работающий продукт'],
+  r:['Резюме — тоже хорошо. Но продукт можно потрогать прямо сейчас.','Согласен. Поэтому продукты — у вас за спиной.'],
+  tip:'Обернитесь: на мониторе живые сайты.',
+  title:'Работы',items:['<a href="https://xmarket-shop.ru" target="_blank" rel="noopener">X-МАРКЕТ</a> — маркетплейс за 2 недели: каталог, заказы, партнёры, 3D-конструктор шкафов и кухонь, ИИ-примерка мебели в интерьере','<a href="https://asmart-studio.ru" target="_blank" rel="noopener">ASMART-STUDIO</a> — лендинг с 3D-сценой, формой и ботом заявок за один вечер','<a href="https://asmart-studio.ru/mood/concept/" target="_blank" rel="noopener">Трекер настроения</a> — рабочий MVP за 30 минут, концепты в стиле трёх банков']},
+ {id:'con',ic:'con',name:'Контакты',sub:'как связаться',
+  q:'Последний вопрос: вы любите сюрпризы?',a:['Да','Не очень'],
+  r:['Тогда сюрприз ждёт в конце.','Тогда без лишних загадок — всё просто.'],
+  tip:'Телефон лежит на табурете слева, за спиной.',
+  title:'Контакты',items:['Телефон и MAX: <b>'+PHONE+'</b>','Отвечаю быстро, готов к созвону']}
+];
+var found={},target=null,started=false,done=false,dragged=false;
+
+/* ---------- UI ---------- */
+var $=function(i){return document.getElementById(i)};
+function svg(k){return '<svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'+IC[k]+'</svg>'}
+function openSheet(h){$('sh').innerHTML='<button class="close" data-x aria-label="Закрыть"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>'+h;$('ov').classList.add('on');var b=$('sh').querySelector('button:not([data-x])');b&&b.focus()}
+function closeSheet(){$('ov').classList.remove('on')}
+$('ov').addEventListener('click',function(e){if(e.target.id==='ov'||e.target.closest('[data-x]'))closeSheet()});
+document.addEventListener('keydown',function(e){if(e.key==='Escape'){closeSheet();$('cv').classList.remove('on')}});
+function cnt(){var n=Object.keys(found).length;$('cnt').textContent='Найдено '+n+' из 5';[].forEach.call($('dots').children,function(d,i){d.classList.toggle('on',i<n)});return n}
+function toast(t){var e=$('toast');e.textContent=t;e.classList.add('on');setTimeout(function(){e.classList.remove('on')},1800)}
+function copy(){var ok=function(){toast('Номер скопирован')};try{navigator.clipboard.writeText(PHONE).then(ok,function(){toast(PHONE)})}catch(e){toast(PHONE)}}
+
+function topics(){openSheet('<div class="eb">Комната</div><h2>Что хотите узнать?</h2><div class="tl">'+T.map(function(t,i){return '<button data-t="'+i+'"><span class="ic">'+svg(t.ic)+'</span><span>'+t.name+'<small>'+t.sub+'</small></span>'+(found[t.id]?'<span class="st">Найдено</span>':'')+'</button>'}).join('')+'</div>');
+ [].forEach.call($('sh').querySelectorAll('[data-t]'),function(b){b.onclick=function(){quiz(+b.dataset.t)}})}
+function quiz(i){var t=T[i];openSheet('<div class="eb">'+t.name+'</div><h2>'+t.q+'</h2><div class="ans">'+t.a.map(function(a,j){return '<button data-a="'+j+'">'+a+'</button>'}).join('')+'</div>');
+ [].forEach.call($('sh').querySelectorAll('[data-a]'),function(b){b.onclick=function(){var j=+b.dataset.a;
+  openSheet('<div class="eb">'+t.name+'</div><h2>'+t.a[j]+'</h2><p>'+t.r[j]+'</p><div class="tip"><b>Подсказка:</b> '+t.tip+'</div><div class="acts"><button class="pri w" id="seek">Искать</button></div>');
+  $('seek').onclick=function(){target=i;closeSheet();setHint('Ищите: '+t.tip.replace(/\.$/,'').toLowerCase())}}})}
+function info(i){var t=T[i],first=!found[t.id];found[t.id]=1;var n=cnt();if(target===i)target=null;mark(i);
+ openSheet('<div class="eb">Найдено '+n+' из 5</div><h2>'+t.title+'</h2><ul class="info">'+t.items.map(function(x){return '<li><span>'+x+'</span></li>'}).join('')+'</ul><div class="acts">'+(t.id==='con'?'<a class="pri w" href="tel:'+TEL+'">Позвонить</a><button class="sec" id="cp">Скопировать номер</button>':'')+'<button class="'+(t.id==='con'?'lnk':'pri w')+'" id="nx">'+(n>=5?'Включить свет':'Дальше')+'</button></div>');
+ var cp=$('cp');if(cp)cp.onclick=copy;
+ $('nx').onclick=function(){closeSheet();if(n>=5&&!done)finale();else if(first)setHint(n>=5?'':'Найдено '+n+' из 5. Что ещё хотите узнать?')}}
+function setHint(t){$('hintT').textContent=t;$('hint').style.opacity=t?1:0}
+function finale(){done=true;lightUp=1;turnTo=0;setHint('');setTimeout(function(){
+ openSheet('<div class="eb">Свет включён</div><h2>Познакомимся?</h2><p>Андрей Баранов — AI-разработчик и вайб-кодер. Собираю работающие продукты с ИИ: сайты, MVP, боты, 3D-конструкторы.</p><div class="tip">Телефон и MAX: <b>'+PHONE+'</b></div><div class="acts"><a class="pri w" href="tel:'+TEL+'">Позвонить</a><button class="sec" id="cp">Скопировать номер</button><button class="lnk" id="full">Открыть резюме целиком</button></div>');
+ $('cp').onclick=copy;$('full').onclick=function(){closeSheet();showCv()}},1800)}
+
+function showCv(){$('cv').classList.add('on');$('cv').scrollTop=0}
+$('cvBody').innerHTML=
+ '<div class="cvs"><h3>Коротко</h3><div class="card"><p style="margin:0">Собираю работающие продукты с помощью ИИ — от идеи до запуска на сервере. За 2026 год без опыта в коде сделал маркетплейс с реальными партнёрами, студийный сайт и несколько MVP. С 2008 года работал как ИП в производстве и торговле — умею общаться с клиентами, считать деньги и доводить дело до конца. Сейчас самозанятый и ищу команду, где это пригодится.</p></div></div>'+
+ '<div class="cvs"><h3>Работы</h3>'+
+ '<div class="card"><b>X-МАРКЕТ</b><div class="sub">Маркетплейс · 2 недели</div><p>Каталог, корзина, заказы, кабинеты партнёров, 3D-конструктор шкафов и кухонь, ИИ-примерка мебели в интерьере. Подключены реальные партнёры.</p><p><a href="https://xmarket-shop.ru" target="_blank" rel="noopener">xmarket-shop.ru →</a></p></div>'+
+ '<div class="card"><b>ASMART-STUDIO</b><div class="sub">Лендинг · 1 вечер</div><p>Скролл-история с 3D-сборкой шкафа, ИИ-примерка, форма заявок с уведомлениями в бот MAX, домен, SSL, Метрика и Вебмастер.</p><p><a href="https://asmart-studio.ru" target="_blank" rel="noopener">asmart-studio.ru →</a></p></div>'+
+ '<div class="card"><b>Трекер настроения</b><div class="sub">MVP · 30 минут</div><p>Рабочее приложение: настроение, факторы, заметка, история. Концепты в стиле трёх банков с переключением на лету.</p><p><a href="https://asmart-studio.ru/mood/concept/" target="_blank" rel="noopener">Открыть MVP →</a></p></div></div>'+
+ '<div class="cvs"><h3>Навыки</h3><div class="card"><b>Разработка с ИИ</b><p>Ставлю задачу и пишу спецификацию, ИИ пишет код, я тестирую и довожу до результата. AI-assisted и spec-driven подход.</p><div class="tags"><span>Python</span><span>FastAPI</span><span>MariaDB</span><span>nginx</span><span>Linux</span><span>Git</span><span>HTML/CSS/JS</span><span>three.js</span><span>Боты MAX</span><span>Яндекс Метрика</span><span>UX/UI</span></div></div></div>'+
+ '<div class="cvs"><h3>Опыт</h3><div class="card"><b>Индивидуальный предприниматель</b><div class="sub">Производство и торговля · с 2008 года</div><p>Работа с клиентами, закупки, расчёты, сроки, ответственность за результат.</p></div><div class="card"><b>Самозанятый · X-МАРКЕТ и ASMART-STUDIO</b><div class="sub">2026 — сейчас</div><p>Создатель: продукт, разработка с ИИ, сервер, запуск, партнёры.</p></div></div>'+
+ '<div class="cvs"><h3>Образование</h3><div class="card"><b>UX/UI-дизайнер</b><div class="sub">Курс Яндекса · диплом</div></div></div>'+
+ '<div class="cvs"><h3>Познакомимся?</h3><div class="card"><div class="sub">Телефон и MAX</div><div class="ph">'+PHONE+'</div><div class="row"><a class="pri" href="tel:'+TEL+'">Позвонить</a><button class="sec" id="cp2">Скопировать номер</button></div></div></div>';
+$('cp2').onclick=copy;
+$('toCv').onclick=showCv;$('skip').onclick=function(){start();showCv()};$('cvX').onclick=function(){$('cv').classList.remove('on')};
+$('ask').onclick=topics;
+function start(){if(started)return;started=true;$('intro').classList.add('off');setTimeout(function(){$('intro').style.display='none'},700)}
+$('go').onclick=start;
+
+/* ---------- 3D ---------- */
+if(!window.THREE){$('hintT').textContent='3D не загрузилось — откройте резюме целиком';return}
+var cv=$('c'),R=new THREE.WebGLRenderer({canvas:cv,antialias:true});R.setPixelRatio(Math.min(2,devicePixelRatio||1));
+R.outputEncoding=THREE.sRGBEncoding;
+var S=new THREE.Scene();S.background=new THREE.Color(0x07070b);S.fog=new THREE.Fog(0x07070b,4,13);
+var C=new THREE.PerspectiveCamera(70,1,.05,40);C.position.set(0,1.55,1.4);C.rotation.order='YXZ';
+var yaw=0,pitch=-.06,vy=0,vp=0,lightUp=0,turnTo=null,L=0;
+function M(c,o){o=o||{};return new THREE.MeshStandardMaterial({color:c,roughness:o.r==null?.85:o.r,metalness:o.m||0,emissive:o.e||0,emissiveIntensity:o.ei||1})}
+function add(g,m,x,y,z,rx,ry,rz){var o=new THREE.Mesh(g,m);o.position.set(x,y,z);o.rotation.set(rx||0,ry||0,rz||0);S.add(o);return o}
+function B(w,h,d){return new THREE.BoxGeometry(w,h,d)}
+function Cy(r1,r2,h,s){return new THREE.CylinderGeometry(r1,r2,h,s||16)}
+function tex(w,h,f){var c=document.createElement('canvas');c.width=w;c.height=h;f(c.getContext('2d'),w,h);var t=new THREE.CanvasTexture(c);t.encoding=THREE.sRGBEncoding;t.anisotropy=4;return t}
+
+/* комната */
+var wallM=M(0x1d1b27),floorM=M(0x15141c,{r:.7});
+var room=add(B(10,4.2,10),wallM,0,2.1,0);room.material.side=THREE.BackSide;
+add(new THREE.PlaneGeometry(10,10),floorM,0,.002,0,-Math.PI/2);
+var trim=M(0x24222f);[[0,.06,-4.98,10,.12,.03],[0,.06,4.98,10,.12,.03],[-4.98,.06,0,.03,.12,10],[4.98,.06,0,.03,.12,10]].forEach(function(a){add(B(a[3],a[4],a[5]),trim,a[0],a[1],a[2])});
+
+/* стул и силуэт */
+var dark=M(0x060609,{r:.95}),chairM=M(0x14131b,{r:.6,m:.3});
+var CZ=-2.6;
+add(B(.56,.06,.5),chairM,0,.48,CZ);add(B(.56,.62,.05),chairM,0,.82,CZ-.25);
+[[-.25,-.22],[.25,-.22],[-.25,.22],[.25,.22]].forEach(function(p){add(Cy(.018,.018,.48,8),chairM,p[0],.24,CZ+p[1])});
+add(Cy(.17,.2,.62,20),dark,0,.86,CZ-.06,-.07);
+add(new THREE.SphereGeometry(.19,20,12),dark,0,1.15,CZ-.08);
+add(Cy(.05,.06,.12),dark,0,1.24,CZ-.07);
+var head=add(new THREE.SphereGeometry(.12,24,16),dark,0,1.38,CZ-.05);head.scale.set(.92,1.08,1);
+[-1,1].forEach(function(s){
+ add(Cy(.075,.07,.46),dark,s*.1,.56,CZ+.17,Math.PI/2);
+ add(Cy(.06,.05,.48),dark,s*.11,.28,CZ+.4);
+ add(B(.1,.06,.24),dark,s*.11,.03,CZ+.46);
+ add(Cy(.052,.046,.34),dark,s*.22,1.0,CZ-.06,.0,0,s*.12);
+ add(Cy(.045,.04,.3),dark,s*.19,.8,CZ+.06,Math.PI/2.3);
+ add(new THREE.SphereGeometry(.048,12,8),dark,s*.16,.74,CZ+.22);
+});
+
+/* свет */
+var amb=new THREE.AmbientLight(0x8c86b0,.05);S.add(amb);
+var hemi=new THREE.HemisphereLight(0xbfb8ff,0x15131c,.0);S.add(hemi);
+var spot=new THREE.SpotLight(0xd9d2ff,.55,9,.3,.7,1.2);spot.position.set(0,4.15,CZ+.1);spot.target.position.set(0,.4,CZ);S.add(spot);S.add(spot.target);
+var rim=new THREE.PointLight(0x7c5cff,1.0,4,2);rim.position.set(0,1.6,CZ-1);S.add(rim);
+var rim2=new THREE.PointLight(0x22d3ee,.6,3.5,2);rim2.position.set(1.1,1.2,CZ-.6);S.add(rim2);
+var room1=new THREE.PointLight(0xfff1e0,0,14,1.4);room1.position.set(0,3.9,0);S.add(room1);
+var cone=add(new THREE.ConeGeometry(1.15,3.7,40,1,true),new THREE.MeshBasicMaterial({color:0xb7a8ff,transparent:true,opacity:.05,blending:THREE.AdditiveBlending,depthWrite:false,side:THREE.DoubleSide}),0,2.3,CZ);
+var lamp=add(Cy(.18,.26,.14,24),M(0x111018,{r:.4,m:.6}),0,4.12,CZ);
+add(new THREE.CircleGeometry(.17,24),new THREE.MeshBasicMaterial({color:0xf2eeff}),0,4.04,CZ,Math.PI/2);
+/* пыль */
+var dn=260,dg=new THREE.BufferGeometry(),dp=new Float32Array(dn*3);for(var i=0;i<dn;i++){var a=Math.random()*6.283,r=Math.random()*1.05,h=Math.random()*3.6;dp[i*3]=Math.cos(a)*r*(1-h/4.2);dp[i*3+1]=.3+h;dp[i*3+2]=Math.sin(a)*r*(1-h/4.2)}
+dg.setAttribute('position',new THREE.BufferAttribute(dp,3));
+var dust=new THREE.Points(dg,new THREE.PointsMaterial({color:0xd8d0ff,size:.014,transparent:true,opacity:.55,blending:THREE.AdditiveBlending,depthWrite:false}));dust.position.z=CZ;S.add(dust);
+
+/* 1 диплом — левая стена */
+var dipT=tex(512,360,function(g,w,h){g.fillStyle='#ece6d8';g.fillRect(0,0,w,h);g.strokeStyle='#b49b62';g.lineWidth=10;g.strokeRect(18,18,w-36,h-36);g.lineWidth=2;g.strokeRect(34,34,w-68,h-68);g.fillStyle='#2b2a33';g.textAlign='center';g.font='700 46px Manrope,sans-serif';g.fillText('ДИПЛОМ',w/2,112);g.font='600 26px Manrope,sans-serif';g.fillText('UX/UI-дизайнер',w/2,166);g.fillStyle='#7d786c';[214,244,274].forEach(function(y,i){g.fillRect(w/2-150+i*20,y,300-i*40,6)});g.fillStyle='#b49b62';g.beginPath();g.arc(w-96,h-92,30,0,7);g.fill()});
+add(B(.04,.6,.82),M(0x2a2420,{r:.5}),-4.96,1.85,-1.2);
+add(new THREE.PlaneGeometry(.72,.5),new THREE.MeshStandardMaterial({map:dipT,roughness:.8}),-4.935,1.85,-1.2,0,Math.PI/2);
+/* 2 стол и ноутбук — справа */
+var deskM=M(0x2a2733,{r:.55}),LX=2.4,LZ=-1.7,lry=Math.atan2(C.position.x-LX,C.position.z-LZ);
+add(B(.9,.04,.6),deskM,LX,.74,LZ,0,lry);[[-.4,-.25],[.4,-.25],[-.4,.25],[.4,.25]].forEach(function(p){var c=Math.cos(lry),s=Math.sin(lry);add(Cy(.02,.02,.72,8),deskM,LX+p[0]*c+p[1]*s,.36,LZ-p[0]*s+p[1]*c)});
+add(B(.38,.018,.26),M(0x3a3846,{r:.3,m:.6}),LX,.77,LZ,0,lry);
+var codeT=tex(512,340,function(g,w,h){g.fillStyle='#0f0e17';g.fillRect(0,0,w,h);var C2=['#7c5cff','#22d3ee','#3fe0c5','#ffc152','#a9a6ba'];for(var y=28,k=0;y<h-20;y+=24,k++){var x=24+(k%4)*22;var n=2+k%3;for(var j=0;j<n;j++){var ww=40+((k*37+j*53)%110);g.fillStyle=C2[(k+j)%5];g.globalAlpha=.85;g.fillRect(x,y,ww,10);x+=ww+12}}g.globalAlpha=1});
+var scr=add(new THREE.PlaneGeometry(.36,.24),new THREE.MeshBasicMaterial({map:codeT}),LX-Math.sin(lry)*.12,.9,LZ-Math.cos(lry)*.12,-.18,lry);
+add(B(.38,.26,.012),M(0x3a3846,{r:.3,m:.6}),LX-Math.sin(lry)*.128,.9,LZ-Math.cos(lry)*.128,-.18,lry);
+/* 3 шкаф — правая стена */
+var wM=M(0x2d2a37,{r:.6}),wx=4.68,wz=1.1;
+add(B(.6,2.3,1.3),wM,wx,1.15,wz);
+add(B(.01,2.2,.012),M(0x0c0b10),wx-.305,1.15,wz);
+[-.08,.08].forEach(function(d){add(B(.03,.22,.02),M(0x9a96aa,{r:.3,m:.8}),wx-.32,1.15,wz+d)});
+add(B(.01,.012,1.26),M(0x0c0b10),wx-.305,1.92,wz);
+/* 4 монитор — задняя стена */
+var siteT=tex(800,460,function(g,w,h){var gr=g.createLinearGradient(0,0,w,0);gr.addColorStop(0,'#7c5cff');gr.addColorStop(1,'#22d3ee');g.fillStyle='#f4f4f8';g.fillRect(0,0,w,h);g.fillStyle='#12111c';g.fillRect(0,0,w,56);g.fillStyle='#fff';g.font='700 26px Unbounded,Manrope,sans-serif';g.fillText('X-МАРКЕТ',28,38);g.fillStyle=gr;g.fillRect(28,84,w-56,150);g.fillStyle='#fff';g.font='700 34px Manrope,sans-serif';g.fillText('Маркетплейс за 2 недели',56,150);g.font='500 20px Manrope,sans-serif';g.fillText('3D-конструктор · ИИ-примерка · партнёры',56,190);for(var i=0;i<4;i++){var x=28+i*((w-56-36)/4+12),ww=(w-56-36)/4;g.fillStyle='#fff';g.fillRect(x,256,ww,180);g.fillStyle=['#d9d2ff','#c9f3fa','#d4f7ee','#ffe7bf'][i];g.fillRect(x+12,268,ww-24,110);g.fillStyle='#12111c';g.fillRect(x+12,392,ww*.6,10);g.fillStyle='#7c5cff';g.fillRect(x+12,412,ww*.35,10)}});
+add(B(1.7,1.02,.06),M(0x111018,{r:.3,m:.5}),0,1.75,4.95);
+add(new THREE.PlaneGeometry(1.6,.92),new THREE.MeshBasicMaterial({map:siteT}),0,1.75,4.915,0,Math.PI);
+add(B(.08,.5,.04),M(0x111018),0,1.12,4.96);
+/* 5 табурет и телефон — слева сзади */
+var px=-2.4,pz=2.5;
+add(Cy(.22,.22,.04,28),M(0x2b2836,{r:.5}),px,.5,pz);[0,2.1,4.2].forEach(function(a){add(Cy(.018,.018,.5,8),M(0x2b2836),px+Math.cos(a)*.15,.25,pz+Math.sin(a)*.15)});
+add(B(.085,.012,.17),M(0x0e0d14,{r:.3,m:.5}),px,.528,pz,0,.4);
+var phS=add(new THREE.PlaneGeometry(.075,.16),new THREE.MeshBasicMaterial({color:0x7c5cff}),px,.536,pz,-Math.PI/2,0,.4);
+
+[[-4.3,1.9,-1.2],[wx-.9,1.6,wz]].forEach(function(p){var l=new THREE.PointLight(0x9a86ff,.35,1.8,2);l.position.set(p[0],p[1],p[2]);S.add(l)});
+/* маркеры */
+var HP=[[-4.85,1.85,-1.2],[LX-Math.sin(lry)*.1,.95,LZ-Math.cos(lry)*.1],[wx-.35,1.35,wz],[0,1.75,4.85],[px,.6,pz]];
+var ringT=tex(128,128,function(g,w){var r=g.createRadialGradient(64,64,10,64,64,62);r.addColorStop(0,'rgba(255,255,255,1)');r.addColorStop(.18,'rgba(200,190,255,.95)');r.addColorStop(.22,'rgba(124,92,255,.0)');r.addColorStop(.62,'rgba(124,92,255,.0)');r.addColorStop(.7,'rgba(140,120,255,.9)');r.addColorStop(.78,'rgba(34,211,238,.0)');g.fillStyle=r;g.fillRect(0,0,128,128)});
+var mk=[],hits=[];
+HP.forEach(function(p,i){var s=new THREE.Sprite(new THREE.SpriteMaterial({map:ringT,transparent:true,depthWrite:false,depthTest:false,blending:THREE.AdditiveBlending}));s.position.set(p[0],p[1],p[2]);s.scale.set(.32,.32,1);s.renderOrder=9;S.add(s);mk.push(s);
+ var h=new THREE.Mesh(new THREE.SphereGeometry(.42,8,6),new THREE.MeshBasicMaterial({visible:false}));h.position.copy(s.position);h.userData.i=i;S.add(h);hits.push(h)});
+function mark(i){mk[i].material.color.set(0x3fe0c5)}
+
+/* управление */
+var down=null,ray=new THREE.Raycaster(),v2=new THREE.Vector2();
+cv.addEventListener('pointerdown',function(e){down={x:e.clientX,y:e.clientY,lx:e.clientX,ly:e.clientY,m:0};cv.setPointerCapture(e.pointerId)});
+cv.addEventListener('pointermove',function(e){if(!down)return;var dx=e.clientX-down.lx,dy=e.clientY-down.ly;down.lx=e.clientX;down.ly=e.clientY;down.m+=Math.abs(dx)+Math.abs(dy);
+ var k=1/Math.min(innerWidth,900)*2.4;vy=dx*k;vp=dy*k;yaw+=vy;pitch=Math.max(-1.05,Math.min(1.05,pitch+vp));turnTo=null;
+ if(!dragged&&down.m>30){dragged=true;if(started&&target==null&&!done)setHint('Нажмите на светящийся круг или спросите: «Что хотите узнать?»')}});
+cv.addEventListener('pointerup',function(e){if(!down)return;var m=down.m;down=null;if(m>8)return;
+ v2.set(e.clientX/innerWidth*2-1,-(e.clientY/innerHeight)*2+1);ray.setFromCamera(v2,C);var h=ray.intersectObjects(hits)[0];if(h&&started)info(h.object.userData.i)});
+addEventListener('keydown',function(e){if($('ov').classList.contains('on')||$('cv').classList.contains('on'))return;if(e.key==='ArrowLeft')yaw+=.2;if(e.key==='ArrowRight')yaw-=.2;if(e.key==='ArrowUp')pitch=Math.min(1.05,pitch+.15);if(e.key==='ArrowDown')pitch=Math.max(-1.05,pitch-.15)});
+
+function size(){var w=innerWidth,h=innerHeight;R.setSize(w,h,false);C.aspect=w/h;C.fov=w<h?78:62;C.updateProjectionMatrix()}
+addEventListener('resize',size);size();
+
+var arw=$('arw'),tv=new THREE.Vector3(),clock=new THREE.Clock();
+function loop(){requestAnimationFrame(loop);var dt=Math.min(.05,clock.getDelta()),t=clock.elapsedTime;
+ if(!down){yaw+=vy;pitch=Math.max(-1.05,Math.min(1.05,pitch+vp));vy*=.9;vp*=.9}
+ if(!started&&!dragged){yaw=Math.sin(t*.25)*.12}
+ if(turnTo!=null){var d=((turnTo-yaw+Math.PI)%(2*Math.PI)+2*Math.PI)%(2*Math.PI)-Math.PI;yaw+=d*.05;pitch+=(-.06-pitch)*.05;if(Math.abs(d)<.002)turnTo=null}
+ C.rotation.set(pitch,yaw,0);
+ var n=Object.keys(found).length,goal=done?1:n/5*.45;L+=(goal-L)*Math.min(1,dt*2);
+ amb.intensity=.05+L*.55;hemi.intensity=L*.7;room1.intensity=L*1.1;spot.intensity=.55+L*1.2;cone.material.opacity=.05*(1-L*.6);
+ wallM.color.setRGB(.11+L*.08,.105+L*.07,.15+L*.1);
+ dust.rotation.y=t*.03;
+ mk.forEach(function(s,i){var on=T[i]&&found[T[i].id],tg=target===i,k=on?.22:(tg?.44+Math.sin(t*5)*.08:.3+Math.sin(t*2.4+i)*.04);s.scale.set(k,k,1);s.material.opacity=on?.6:1});
+ if(target!=null&&!$('ov').classList.contains('on')){tv.copy(mk[target].position).project(C);var cz=tv.z,inv=cz>1;var x=tv.x,y=tv.y;if(inv){x=-x;y=-y}
+  var off=inv||Math.abs(x)>.86||Math.abs(y)>.8;
+  if(off){var a=Math.atan2(y,x),m=Math.max(Math.abs(Math.cos(a))/.82,Math.abs(Math.sin(a))/.72);var ex=Math.cos(a)/m,ey=Math.sin(a)/m;arw.style.display='grid';arw.style.left=((ex+1)/2*innerWidth)+'px';arw.style.top=((1-ey)/2*innerHeight)+'px';arw.style.transform='rotate('+(-a)+'rad)'}else arw.style.display='none'}
+ else arw.style.display='none';
+ R.render(S,C)}
+loop();
+window.__dbg={info:info,quiz:quiz,topics:topics,finale:finale,found:found,setYaw:function(y){yaw=y;vy=0},start:start};
+})();
+</script>
+</body>
+</html>
