@@ -324,10 +324,10 @@ var HP=[[-4.85,1.85,-1.2],[LX-Math.sin(lry)*.1,.95,LZ-Math.cos(lry)*.1],[wx-.35,
 var ringT=tex(128,128,function(g,w){var r=g.createRadialGradient(64,64,10,64,64,62);r.addColorStop(0,'rgba(255,255,255,1)');r.addColorStop(.18,'rgba(200,190,255,.95)');r.addColorStop(.22,'rgba(124,92,255,.0)');r.addColorStop(.62,'rgba(124,92,255,.0)');r.addColorStop(.7,'rgba(140,120,255,.9)');r.addColorStop(.78,'rgba(34,211,238,.0)');g.fillStyle=r;g.fillRect(0,0,128,128)});
 var mk=[],hits=[];
 HP.forEach(function(p,i){var s=new THREE.Sprite(new THREE.SpriteMaterial({map:ringT,transparent:true,depthWrite:false,depthTest:false,blending:THREE.AdditiveBlending}));s.position.set(p[0],p[1],p[2]);s.scale.set(.32,.32,1);s.renderOrder=9;S.add(s);mk.push(s);
- var h=new THREE.Mesh(new THREE.SphereGeometry(.42,8,6),new THREE.MeshBasicMaterial({visible:false}));h.position.copy(s.position);h.userData.i=i;S.add(h);hits.push(h)});
+ var h=new THREE.Mesh(new THREE.SphereGeometry(.6,8,6),new THREE.MeshBasicMaterial({visible:false}));h.position.copy(s.position);h.userData.i=i;S.add(h);hits.push(h)});
 var noteT=tex(256,170,function(g,w,h){g.fillStyle='#f3efe6';g.fillRect(0,0,w,h);g.fillStyle='#6b6578';for(var y=40;y<h-20;y+=24)g.fillRect(24,y,w-48-(y%3)*20,4);g.fillStyle='#7c5cff';g.font='700 32px Manrope,sans-serif';g.fillText('?',w-44,42)});
 add(new THREE.PlaneGeometry(.2,.13),new THREE.MeshStandardMaterial({map:noteT,roughness:.9}),.42,.006,CZ+.62,-Math.PI/2,0,.5);
-var nh=new THREE.Mesh(new THREE.SphereGeometry(.28,8,6),new THREE.MeshBasicMaterial({visible:false}));nh.position.set(.42,.08,CZ+.62);nh.userData.egg=1;S.add(nh);hits.push(nh);
+var nh=new THREE.Mesh(new THREE.SphereGeometry(.4,8,6),new THREE.MeshBasicMaterial({visible:false}));nh.position.set(.42,.08,CZ+.62);nh.userData.egg=1;S.add(nh);hits.push(nh);
 function mark(i){mk[i].material.color.set(0x3fe0c5)}
 
 /* управление */
@@ -336,8 +336,9 @@ cv.addEventListener('pointerdown',function(e){down={x:e.clientX,y:e.clientY,lx:e
 cv.addEventListener('pointermove',function(e){if(!down)return;var dx=e.clientX-down.lx,dy=e.clientY-down.ly;down.lx=e.clientX;down.ly=e.clientY;down.m+=Math.abs(dx)+Math.abs(dy);
  var k=1/Math.min(innerWidth,900)*2.4;vy=dx*k;vp=dy*k;yaw+=vy;pitch=Math.max(-1.05,Math.min(1.05,pitch+vp));turnTo=null;
  if(!dragged&&down.m>30){dragged=true;if(started&&target==null&&!done)setHint('Нажмите на светящийся круг или спросите: «Что хотите узнать?»')}});
-cv.addEventListener('pointerup',function(e){if(!down)return;var m=down.m;down=null;if(m>8)return;
- v2.set(e.clientX/innerWidth*2-1,-(e.clientY/innerHeight)*2+1);ray.setFromCamera(v2,C);var h=ray.intersectObjects(hits)[0];if(h&&started){if(h.object.userData.egg)egg();else info(h.object.userData.i)}});
+var lastM=99;
+cv.addEventListener('pointerup',function(e){if(!down)return;lastM=down.m;down=null});
+cv.addEventListener('click',function(e){if(lastM>10||!started)return;lastM=99;var best=-1,bd=70,pv=new THREE.Vector3();mk.forEach(function(s,i){pv.copy(s.position).project(C);if(pv.z>1)return;var x=(pv.x+1)/2*innerWidth,y=(1-pv.y)/2*innerHeight,d=Math.hypot(x-e.clientX,y-e.clientY);if(d<bd){bd=d;best=i}});if(best>=0){info(best);return}v2.set(e.clientX/innerWidth*2-1,-(e.clientY/innerHeight)*2+1);ray.setFromCamera(v2,C);var h=ray.intersectObjects(hits)[0];if(h){if(h.object.userData.egg)egg();else info(h.object.userData.i)}});
 addEventListener('keydown',function(e){if($('ov').classList.contains('on')||$('cv').classList.contains('on'))return;if(e.key==='ArrowLeft')yaw+=.2;if(e.key==='ArrowRight')yaw-=.2;if(e.key==='ArrowUp')pitch=Math.min(1.05,pitch+.15);if(e.key==='ArrowDown')pitch=Math.max(-1.05,pitch-.15)});
 
 function size(){var w=innerWidth,h=innerHeight;R.setSize(w,h,false);C.aspect=w/h;C.fov=w<h?78:62;C.updateProjectionMatrix()}
@@ -360,7 +361,7 @@ function loop(){requestAnimationFrame(loop);var dt=Math.min(.05,clock.getDelta()
  else arw.style.display='none';
  R.render(S,C)}
 loop();
-window.__dbg={info:info,quiz:quiz,topics:topics,finale:finale,found:found,setYaw:function(y){yaw=y;vy=0},start:start};
+window.__dbg={mk:function(i){var v=mk[i].position.clone().project(C);return [(v.x+1)/2*innerWidth,(1-v.y)/2*innerHeight]},info:info,quiz:quiz,topics:topics,finale:finale,found:found,setYaw:function(y){yaw=y;vy=0},start:start};
 })();
 </script>
 </body>
