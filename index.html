@@ -111,6 +111,7 @@ a.pri,a.sec{display:inline-flex;align-items:center;justify-content:center;text-d
 a.sec{color:var(--tx)}
 .toast{position:fixed;left:50%;bottom:calc(96px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:12px 16px;font-size:14px;font-weight:600;z-index:40;opacity:0;transition:opacity .3s;pointer-events:none}
 .toast.on{opacity:1}
+#cf{position:fixed;inset:0;pointer-events:none;z-index:15;overflow:hidden}#cf b{position:absolute;left:0;top:0;width:8px;height:12px;border-radius:2px}
 @media(max-width:400px){.iw h1,.cvw h1{font-size:28px}.ghost,.pill{padding:0 12px}}
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
@@ -150,6 +151,7 @@ a.sec{color:var(--tx)}
   <div id="cvBody"></div>
 </div></div>
 <div class="toast" id="toast"></div>
+<div id="cf" aria-hidden="true"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
 <script>
@@ -212,9 +214,11 @@ function info(i){var t=T[i],first=!found[t.id];found[t.id]=1;var n=cnt();if(targ
  openSheet('<div class="eb">Найдено '+n+' из 5</div><h2>'+t.title+'</h2><ul class="info">'+t.items.map(function(x){return '<li><span>'+x+'</span></li>'}).join('')+'</ul><div class="acts">'+(t.id==='con'?'<a class="pri w" href="tel:'+TEL+'">Позвонить</a><button class="sec" id="cp">Скопировать номер</button>':'')+'<button class="'+(t.id==='con'?'lnk':'pri w')+'" id="nx">'+(n>=5?'Включить свет':'Дальше')+'</button></div>');
  var cp=$('cp');if(cp)cp.onclick=copy;
  $('nx').onclick=function(){closeSheet();if(n>=5&&!done)finale();else if(first)setHint(n>=5?'':'Найдено '+n+' из 5. Что ещё хотите узнать?')}}
+var eggF=false;function egg(){var f=!eggF;eggF=true;openSheet('<div class="eb">Пасхалка'+(f?' найдена':'')+'</div><h2>Вы нашли записку под стулом</h2><p>Значит, вы внимательны к деталям — как и Андрей. Кстати, весь этот квест он собрал за один вечер вместе с ИИ.</p><div class="acts"><button class="pri w" data-x>Вернуться в комнату</button></div>');if(f)boom()}
+function boom(){var CC=['#7c5cff','#22d3ee','#3fe0c5','#ffc152','#ff4f8b','#ffffff'],cf=$('cf'),ox=innerWidth/2,oy=innerHeight*.42,P=[];cf.innerHTML='';for(var i=0;i<90;i++){var b=document.createElement('b');b.style.background=CC[i%6];cf.appendChild(b);var a=-Math.PI/2+(Math.random()-.5)*2.6,v=300+Math.random()*450;P.push([b,Math.cos(a)*v,Math.sin(a)*v,Math.random()*720-360])}var t0=performance.now();(function f(n){var t=Math.max(0,(n-t0)/1000);if(t>3.2){cf.innerHTML='';return}P.forEach(function(q){q[0].style.opacity=1-Math.max(0,Math.min(1,t-2.2));q[0].style.transform='translate('+(ox+q[1]*t)+'px,'+(oy+q[2]*t+460*t*t)+'px) rotate('+q[3]*t+'deg)'});requestAnimationFrame(f)})(t0)}
 function setHint(t){$('hintT').textContent=t;$('hint').style.opacity=t?1:0}
-function finale(){done=true;lightUp=1;turnTo=0;setHint('');setTimeout(function(){
- openSheet('<div class="eb">Свет включён</div><h2>Познакомимся?</h2><p>Андрей Баранов — AI-разработчик и вайб-кодер. Собираю работающие продукты с ИИ: сайты, MVP, боты, 3D-конструкторы.</p><div class="tip">Телефон и MAX: <b>'+PHONE+'</b></div><div class="acts"><a class="pri w" href="tel:'+TEL+'">Позвонить</a><button class="sec" id="cp">Скопировать номер</button><button class="lnk" id="full">Открыть резюме целиком</button></div>');
+function finale(){done=true;lightUp=1;turnTo=0;setHint('');setTimeout(function(){boom();
+ openSheet('<div class="eb">Свет включён</div><h2>Познакомимся?</h2><p>Андрей Баранов — AI-разработчик и вайб-кодер. Собираю работающие продукты с ИИ: сайты, MVP, боты, 3D-конструкторы.</p>'+(eggF?'':'<p>P.S. В комнате спрятан ещё один секрет. Найдёте?</p>')+'<div class="tip">Телефон и MAX: <b>'+PHONE+'</b></div><div class="acts"><a class="pri w" href="tel:'+TEL+'">Позвонить</a><button class="sec" id="cp">Скопировать номер</button><button class="lnk" id="full">Открыть резюме целиком</button></div>');
  $('cp').onclick=copy;$('full').onclick=function(){closeSheet();showCv()}},1800)}
 
 function showCv(){$('cv').classList.add('on');$('cv').scrollTop=0}
@@ -321,6 +325,9 @@ var ringT=tex(128,128,function(g,w){var r=g.createRadialGradient(64,64,10,64,64,
 var mk=[],hits=[];
 HP.forEach(function(p,i){var s=new THREE.Sprite(new THREE.SpriteMaterial({map:ringT,transparent:true,depthWrite:false,depthTest:false,blending:THREE.AdditiveBlending}));s.position.set(p[0],p[1],p[2]);s.scale.set(.32,.32,1);s.renderOrder=9;S.add(s);mk.push(s);
  var h=new THREE.Mesh(new THREE.SphereGeometry(.42,8,6),new THREE.MeshBasicMaterial({visible:false}));h.position.copy(s.position);h.userData.i=i;S.add(h);hits.push(h)});
+var noteT=tex(256,170,function(g,w,h){g.fillStyle='#f3efe6';g.fillRect(0,0,w,h);g.fillStyle='#6b6578';for(var y=40;y<h-20;y+=24)g.fillRect(24,y,w-48-(y%3)*20,4);g.fillStyle='#7c5cff';g.font='700 32px Manrope,sans-serif';g.fillText('?',w-44,42)});
+add(new THREE.PlaneGeometry(.2,.13),new THREE.MeshStandardMaterial({map:noteT,roughness:.9}),.42,.006,CZ+.62,-Math.PI/2,0,.5);
+var nh=new THREE.Mesh(new THREE.SphereGeometry(.28,8,6),new THREE.MeshBasicMaterial({visible:false}));nh.position.set(.42,.08,CZ+.62);nh.userData.egg=1;S.add(nh);hits.push(nh);
 function mark(i){mk[i].material.color.set(0x3fe0c5)}
 
 /* управление */
@@ -330,7 +337,7 @@ cv.addEventListener('pointermove',function(e){if(!down)return;var dx=e.clientX-d
  var k=1/Math.min(innerWidth,900)*2.4;vy=dx*k;vp=dy*k;yaw+=vy;pitch=Math.max(-1.05,Math.min(1.05,pitch+vp));turnTo=null;
  if(!dragged&&down.m>30){dragged=true;if(started&&target==null&&!done)setHint('Нажмите на светящийся круг или спросите: «Что хотите узнать?»')}});
 cv.addEventListener('pointerup',function(e){if(!down)return;var m=down.m;down=null;if(m>8)return;
- v2.set(e.clientX/innerWidth*2-1,-(e.clientY/innerHeight)*2+1);ray.setFromCamera(v2,C);var h=ray.intersectObjects(hits)[0];if(h&&started)info(h.object.userData.i)});
+ v2.set(e.clientX/innerWidth*2-1,-(e.clientY/innerHeight)*2+1);ray.setFromCamera(v2,C);var h=ray.intersectObjects(hits)[0];if(h&&started){if(h.object.userData.egg)egg();else info(h.object.userData.i)}});
 addEventListener('keydown',function(e){if($('ov').classList.contains('on')||$('cv').classList.contains('on'))return;if(e.key==='ArrowLeft')yaw+=.2;if(e.key==='ArrowRight')yaw-=.2;if(e.key==='ArrowUp')pitch=Math.min(1.05,pitch+.15);if(e.key==='ArrowDown')pitch=Math.max(-1.05,pitch-.15)});
 
 function size(){var w=innerWidth,h=innerHeight;R.setSize(w,h,false);C.aspect=w/h;C.fov=w<h?78:62;C.updateProjectionMatrix()}
