@@ -115,6 +115,8 @@ a.sec{color:var(--tx)}
 @media(max-width:400px){.iw h1,.cvw h1{font-size:28px}.ghost,.pill{padding:0 12px}}
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
+<script>(function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};m[i].l=1*new Date();for(var j=0;j<document.scripts.length;j++){if(document.scripts[j].src===r){return}}k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})(window,document,'script','https://mc.yandex.ru/metrika/tag.js?id=114310430','ym');ym(114310430,'init',{ssr:true,webvisor:true,clickmap:true,accurateTrackBounce:true,trackLinks:true});</script>
+<noscript><div><img src="https://mc.yandex.ru/watch/114310430" style="position:absolute;left:-9999px" alt=""></div></noscript>
 </head>
 <body>
 <canvas id="c" aria-label="Тёмная комната. Поворачивайте обзор пальцем или мышью"></canvas>
@@ -202,7 +204,7 @@ $('ov').addEventListener('click',function(e){if(e.target.id==='ov'||e.target.clo
 document.addEventListener('keydown',function(e){if(e.key==='Escape'){closeSheet();$('cv').classList.remove('on')}});
 function cnt(){var n=Object.keys(found).length;$('cnt').textContent='Найдено '+n+' из 5';[].forEach.call($('dots').children,function(d,i){d.classList.toggle('on',i<n)});return n}
 function toast(t){var e=$('toast');e.textContent=t;e.classList.add('on');setTimeout(function(){e.classList.remove('on')},1800)}
-function copy(){var ok=function(){toast('Номер скопирован')};try{navigator.clipboard.writeText(PHONE).then(ok,function(){toast(PHONE)})}catch(e){toast(PHONE)}}
+function copy(){try{ym(114310430,'reachGoal','resume_phone')}catch(x){};var ok=function(){toast('Номер скопирован')};try{navigator.clipboard.writeText(PHONE).then(ok,function(){toast(PHONE)})}catch(e){toast(PHONE)}}
 
 function topics(){openSheet('<div class="eb">Комната</div><h2>Что хотите узнать?</h2><div class="tl">'+T.map(function(t,i){return '<button data-t="'+i+'"><span class="ic">'+svg(t.ic)+'</span><span>'+t.name+'<small>'+t.sub+'</small></span>'+(found[t.id]?'<span class="st">Найдено</span>':'')+'</button>'}).join('')+'</div>');
  [].forEach.call($('sh').querySelectorAll('[data-t]'),function(b){b.onclick=function(){quiz(+b.dataset.t)}})}
@@ -219,9 +221,9 @@ function boom(){var CC=['#7c5cff','#22d3ee','#3fe0c5','#ffc152','#ff4f8b','#ffff
 function setHint(t){$('hintT').textContent=t;$('hint').style.opacity=t?1:0}
 function finale(){done=true;lightUp=1;turnTo=0;setHint('');setTimeout(function(){boom();
  openSheet('<div class="eb">Свет включён</div><h2>Познакомимся?</h2><p>Андрей Баранов — AI-разработчик и вайб-кодер. Собираю работающие продукты с ИИ: сайты, MVP, боты, 3D-конструкторы.</p>'+(eggF?'':'<p>P.S. Кажется, у стула кто-то обронил записку. Посмотрите под ноги.</p>')+'<div class="tip">Телефон и MAX: <b>'+PHONE+'</b></div><div class="acts"><a class="pri w" href="tel:'+TEL+'">Позвонить</a><button class="sec" id="cp">Скопировать номер</button><button class="lnk" id="full">Открыть резюме целиком</button></div>');
- $('cp').onclick=copy;$('full').onclick=function(){closeSheet();showCv()};if(!eggF)setHint('Посмотрите под ноги: у стула что-то лежит')},1800)}
+ try{ym(114310430,'reachGoal','resume_finale')}catch(x){};$('cp').onclick=copy;$('full').onclick=function(){closeSheet();showCv()};if(!eggF)setHint('Посмотрите под ноги: у стула что-то лежит')},1800)}
 
-function showCv(){$('cv').classList.add('on');$('cv').scrollTop=0}
+function showCv(){try{ym(114310430,'reachGoal','resume_full')}catch(x){};$('cv').classList.add('on');$('cv').scrollTop=0}
 $('cvBody').innerHTML=
  '<div class="cvs"><h3>Коротко</h3><div class="card"><p style="margin:0">Собираю работающие продукты с помощью ИИ — от идеи до запуска на сервере. За 2026 год без опыта в коде сделал маркетплейс с реальными партнёрами, студийный сайт и несколько MVP. С 2008 года работал как ИП в производстве и торговле — умею общаться с клиентами, считать деньги и доводить дело до конца. Сейчас самозанятый и ищу команду, где это пригодится.</p></div></div>'+
  '<div class="cvs"><h3>Работы</h3>'+
